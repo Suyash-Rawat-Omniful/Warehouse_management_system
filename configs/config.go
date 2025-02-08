@@ -35,9 +35,6 @@ func Init(pollDuration time.Duration) (err error) {
 	ctx := context.TODO()
 
 	configSource := "local"
-	// if !ok {
-	// 	err = errors.New("CONFIG_SOURCE env required")
-	// }
 
 	if configSource != constants.LocalSource && !strings.HasPrefix(configSource, "appconfig:") {
 		err = fmt.Errorf("CONFIG_SOURCE %s not valid", configSource)

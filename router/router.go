@@ -41,6 +41,7 @@ func Initialize(ctx context.Context, s *http.Server) (err error) {
 	apiV1.GET("/inventories/:id", controllers.GetInventory)
 	apiV1.PUT("/inventories/:id", controllers.UpdateInventory)
 	apiV1.DELETE("/inventories/:id", controllers.DeleteInventory)
+	apiV1.GET("/inventories/validate/:id", controllers.CheckAndDecrementInventory)
 
 	return nil
 }

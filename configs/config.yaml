@@ -1,15 +1,6 @@
 server:
   port: ":8081"
 
-newrelic:
-  enabled: true
-  appName: "Tenant Service Staging"
-  licence: "<-------------------------------------->"
-  distributedTracer: true
-
-tenantService:
-  baseUrl: "http://tenantapi.omnifulinfra.com"
-  timeout: 5
 
 env: "staging"
 
@@ -44,75 +35,8 @@ postgresql:
     username: "postgres"
     password: "Pyari@123"
 
-
-email:
-  region: "eu-central-1"
-
-s3:
-  bucket: "omniful-testing-s3"
-  region: "eu-central-1"
-  ephemeralUploadBucket: "test-s3-bucket"
-
-apiGatewayClient:
-  bucket: "omniful-testing"
-  region: "eu-central-1"
-
-api:
-  prefixUrl: "https://"
-  postfixUrl: ".development.omniful.com"
-  postfixUrls:
-    selfOrFulfillmentTypeUrl: ".development.omniful.com"
-    shippingPartnerTypeUrl: ".devfleet.omniful.com"
-
-consumers:
-  tenantCreate:
-    topic: "omniful.tenant-service.tenant.create-events"
-    groupId: "1"
-    enabled: false
-  seller:
-    topic: "omniful.tenant-service.seller.events"
-
 onlineKafka:
   brokers:
     - "localhost:9092"
   clientId: "tenant-service"
   version: 2.0.0
-
-wmsService:
-  baseUrl: "http://wmsapi.omnifulinfra.com/"
-  timeout: 5
-
-googleApi:
-  baseUrl: "https://maps.googleapis.com/maps/api"
-  timeout: 5
-  key: ""
-
-gcp:
-  service:
-    cloudTranslation:
-      location: "us-central1"
-
-migration:
-  flag: true
-
-
-
-
-
-
-adminDashboard:
-  stagHost: "stagadmin.omniful.com"
-  prodHost: "admin.omniful.com"
-  stagWorkspace: "Staging admin dashboard"
-  prodWorkspace: "Admin dashboard"
-
-secretManager:
-  region: "region"
-  omnifulParameterSecretID: "omniful_parameter_secret_key"
-  cloudTranslationSecretKey: "gcp_cloud_translation_api"
-
-exchangeRateAPIClients:
-  exchangeRateV6:
-    baseURL: "https://v6.exchangerate-api.com/v6/"
-    apiKey: "local-api-key"
-    timeout: 30

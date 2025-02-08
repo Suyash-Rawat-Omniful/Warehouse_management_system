@@ -6,6 +6,20 @@ import (
 )
 
 func CreateHub(hub *models.Hub) error {
+	// ctx := context.Background()
+	// HUB_ID := hub.ID
+	// TENANT_ID := hub.TenantID
+	// fields := map[string]interface{}{
+	// 	"hub_id":    HUB_ID,
+	// 	"tenant_id": TENANT_ID,
+	// }
+	// var key string = "hub:" + strconv.Itoa(int(HUB_ID))
+	// count, err := redis.Client.HSetAll(ctx, key, fields)
+	// if err != nil {
+	// 	fmt.Println("can't save the hub in redis : ", fields)
+	// } else {
+	// 	fmt.Println("save the hub in redis : ", fields, " and count is ", count)
+	// }
 	return appinit.DB.Create(hub).Error
 }
 

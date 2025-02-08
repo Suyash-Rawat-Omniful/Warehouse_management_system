@@ -7,7 +7,6 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/omniful/go_commons/config"
 	"github.com/omniful/go_commons/db/sql/migration"
 	"github.com/omniful/go_commons/http"
 	"github.com/omniful/go_commons/log"
@@ -21,17 +20,18 @@ const (
 )
 
 func main() {
-	err := config.Init(time.Second * 10)
-	if err != nil {
-		log.Panicf("Error while initialising config, err: %v", err)
-		panic(err)
-	}
+	// err := config.Init(time.Second * 10)
+	// if err != nil {
+	// 	log.Panicf("Error while initialising config, err: %v", err)
+	// 	panic(err)
+	// }
 
-	ctx, err := config.TODOContext()
-	if err != nil {
-		log.Panicf("Error while getting context from config, err: %v", err)
-		panic(err)
-	}
+	// ctx, err := config.TODOContext()
+	// if err != nil {
+	// 	log.Panicf("Error while getting context from config, err: %v", err)
+	// 	panic(err)
+	// }
+	ctx := context.TODO()
 	runMigration(ctx, "up", "0")
 	appinit.Initialize(ctx)
 
@@ -39,7 +39,7 @@ func main() {
 	server := http.InitializeServer(":8081", 10*time.Second, 10*time.Second, 70*time.Second)
 	log.Infof("Starting server on port 8081")
 
-	err = router.Initialize(ctx, server)
+	err := router.Initialize(ctx, server)
 	if err != nil {
 		log.Panicf("Error while initialising router, err: %v", err)
 		panic(err)
@@ -54,11 +54,11 @@ func main() {
 }
 
 func runMigration(ctx context.Context, migrationType string, number string) {
-	database := config.GetString(ctx, "postgresql.database")
-	mysqlWriteHost := config.GetString(ctx, "postgresql.master.host")
-	mysqlWritePort := config.GetString(ctx, "postgresql.master.port")
-	mysqlWritePassword := config.GetString(ctx, "postgresql.master.password")
-	mysqlWriterUsername := config.GetString(ctx, "postgresql.master.username")
+	database := "warehouse_management_system"
+	mysqlWriteHost := "localhost"
+	mysqlWritePort := "5432"
+	mysqlWritePassword := "root"
+	mysqlWriterUsername := "sample_user"
 
 	m, err := migration.InitializeMigrate("file://deployment/migration", "postgres://"+mysqlWriteHost+":"+mysqlWritePort+"/"+database+"?user="+mysqlWriterUsername+"&password="+mysqlWritePassword+"&sslmode=disable")
 	if err != nil {

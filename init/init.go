@@ -13,6 +13,7 @@ var DB *gorm.DB
 
 func Initialize(ctx context.Context) {
 	initializeDB(ctx)
+	// redis.Start()
 }
 
 func initializeDB(ctx context.Context) {
