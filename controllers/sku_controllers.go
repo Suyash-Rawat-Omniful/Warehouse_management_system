@@ -5,6 +5,7 @@ import (
 	"net/http"
 	appinit "service2/init"
 	"service2/models"
+	"service2/redis"
 	"service2/services"
 	"strconv"
 
@@ -24,7 +25,15 @@ func CreateSKU(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create SKU"})
 		return
 	}
-
+	ID := strconv.FormatUint(uint64(sku.ID), 10)
+	fields := map[string]interface{}{
+		"ID":         sku.ID,
+		"Product_ID": sku.ProductID,
+		"Price":      sku.Price,
+		"Name":       sku.Name,
+		"Fragile":    sku.Fragile,
+	}
+	_, _ = redis.Client.HSetAll(ctx, "sku:"+ID, fields)
 	ctx.JSON(http.StatusCreated, sku)
 }
 
@@ -48,11 +57,28 @@ func GetSKU(ctx *gin.Context) {
 		return
 	}
 
+	SKUFromRedis, err := redis.Client.HGetAll(ctx, "sku:"+idStr)
+
+	if err == nil && len(SKUFromRedis) > 0 {
+		ctx.JSON(http.StatusOK, SKUFromRedis)
+		return
+	}
+
 	sku, err := services.GetSKUByID(uint(id))
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, gin.H{"error": "SKU not found"})
 		return
 	}
+
+	ID := strconv.FormatUint(uint64(sku.ID), 10)
+	fields := map[string]interface{}{
+		"ID":         sku.ID,
+		"Product_ID": sku.ProductID,
+		"Price":      sku.Price,
+		"Name":       sku.Name,
+		"Fragile":    sku.Fragile,
+	}
+	_, _ = redis.Client.HSetAll(ctx, "sku:"+ID, fields)
 
 	ctx.JSON(http.StatusOK, sku)
 }

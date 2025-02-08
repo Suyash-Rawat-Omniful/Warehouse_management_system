@@ -30,11 +30,12 @@ func Initialize(ctx context.Context, s *http.Server) (err error) {
 
 	// Hub Routes
 	apiV1.GET("/hubs/validate/:id", controllers.ValidateHub)
-	apiV1.POST("/hubs", controllers.CreateHub)       // Create Hub
-	apiV1.GET("/hubs", controllers.GetAllHubs)       // Get all Hubs
-	apiV1.GET("/hubs/:id", controllers.GetHub)       // Get Hub by ID
-	apiV1.PUT("/hubs/:id", controllers.UpdateHub)    // Update Hub
-	apiV1.DELETE("/hubs/:id", controllers.DeleteHub) // Delete Hub
+	apiV1.POST("/hubs/multiple", controllers.CreateMultipleHubs) // Create Hub
+	apiV1.POST("/hubs", controllers.CreateHub)                   // Create Hub
+	apiV1.GET("/hubs", controllers.GetAllHubs)                   // Get all Hubs
+	apiV1.GET("/hubs/:id", controllers.GetHub)                   // Get Hub by ID
+	apiV1.PUT("/hubs/:id", controllers.UpdateHub)                // Update Hub
+	apiV1.DELETE("/hubs/:id", controllers.DeleteHub)             // Delete Hub
 	// Inventory Routes
 	apiV1.POST("/inventories", controllers.CreateInventory)
 	apiV1.GET("/inventories", controllers.GetAllInventories)

@@ -2,6 +2,7 @@ package appinit
 
 import (
 	"context"
+	"service2/redis"
 	"time"
 
 	"github.com/omniful/go_commons/config"
@@ -13,7 +14,7 @@ var DB *gorm.DB
 
 func Initialize(ctx context.Context) {
 	initializeDB(ctx)
-	// redis.Start()
+	redis.Start()
 }
 
 func initializeDB(ctx context.Context) {
