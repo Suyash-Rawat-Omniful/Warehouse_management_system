@@ -4,12 +4,6 @@ server:
 
 env: "staging"
 
-log:
-  level: "debug"
-  format: "json"
-  request: true
-  response: true
-  request_debug: true
 
 service:
   name: "tenant_service"
@@ -35,8 +29,17 @@ postgresql:
     username: "postgres"
     password: "Pyari@123"
 
+
+
 onlineKafka:
   brokers:
     - "localhost:9092"
   clientId: "tenant-service"
   version: 2.0.0
+
+
+
+
+
+
+
