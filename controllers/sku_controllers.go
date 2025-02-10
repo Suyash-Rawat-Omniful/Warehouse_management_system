@@ -13,7 +13,6 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-// CreateSKU creates a new SKU
 func CreateSKU(ctx *gin.Context) {
 	var sku models.SKU
 	if err := ctx.ShouldBindJSON(&sku); err != nil {
@@ -25,19 +24,9 @@ func CreateSKU(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create SKU"})
 		return
 	}
-	ID := strconv.FormatUint(uint64(sku.ID), 10)
-	fields := map[string]interface{}{
-		"ID":         sku.ID,
-		"Product_ID": sku.ProductID,
-		"Price":      sku.Price,
-		"Name":       sku.Name,
-		"Fragile":    sku.Fragile,
-	}
-	_, _ = redis.Client.HSetAll(ctx, "sku:"+ID, fields)
 	ctx.JSON(http.StatusCreated, sku)
 }
 
-// GetAllSKUs retrieves all SKUs
 func GetAllSKUs(ctx *gin.Context) {
 	skus, err := services.GetAllSKUs()
 	if err != nil {
@@ -48,10 +37,9 @@ func GetAllSKUs(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, skus)
 }
 
-// GetSKU retrieves a SKU by ID
 func GetSKU(ctx *gin.Context) {
 	idStr := ctx.Param("id")
-	id, err := strconv.ParseUint(idStr, 10, 32) // Convert string to uint
+	id, err := strconv.ParseUint(idStr, 10, 32)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid SKU ID"})
 		return
@@ -83,11 +71,10 @@ func GetSKU(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, sku)
 }
 
-// UpdateSKU updates a SKU
 func UpdateSKU(ctx *gin.Context) {
 	var sku models.SKU
 	idStr := ctx.Param("id")
-	id, err := strconv.ParseUint(idStr, 10, 32) // Convert string to uint
+	id, err := strconv.ParseUint(idStr, 10, 32)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid SKU ID"})
 		return
@@ -106,11 +93,9 @@ func UpdateSKU(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, sku)
 }
-
-// DeleteSKU deletes a SKU by ID
 func DeleteSKU(ctx *gin.Context) {
 	idStr := ctx.Param("id")
-	id, err := strconv.ParseUint(idStr, 10, 32) // Convert string to uint
+	id, err := strconv.ParseUint(idStr, 10, 32)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid SKU ID"})
 		return
@@ -124,21 +109,16 @@ func DeleteSKU(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"message": "SKU deleted"})
 }
 
-// FetchSKUsByTenant fetches SKUs for a specific tenant
 func FetchSKUsByTenant(c *gin.Context) {
 	tenantID := c.Param("id")
 
-	//print the tenant id
 	fmt.Println("tenant_id is :", tenantID)
-
-	// Convert to proper data type
 	tenantIDInt, err := strconv.Atoi(tenantID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid tenant_id"})
 		return
 	}
 
-	// Fetch hubs for the specific tenant
 	var hubs []models.Hub
 	err = appinit.DB.Where("tenant_id = ?", tenantIDInt).Find(&hubs).Error
 	if err != nil {
@@ -146,7 +126,6 @@ func FetchSKUsByTenant(c *gin.Context) {
 		return
 	}
 
-	// Fetch inventories for the hubs
 	var inventories []models.Inventory
 	err = appinit.DB.Where("hub_id IN (?)", getHubIDs(hubs)).Find(&inventories).Error
 	if err != nil {
@@ -154,7 +133,6 @@ func FetchSKUsByTenant(c *gin.Context) {
 		return
 	}
 
-	// Fetch SKUs for the inventories
 	var skuIDs []uint
 	for _, inventory := range inventories {
 		skuIDs = append(skuIDs, inventory.Sku_id)
@@ -167,13 +145,9 @@ func FetchSKUsByTenant(c *gin.Context) {
 		return
 	}
 
-	// Return SKUs as response
 	c.JSON(http.StatusOK, skus)
 }
 
-// FetchSKUsBySeller fetches SKUs for a specific seller
-
-// Helper function to extract hub IDs from hubs array
 func getHubIDs(hubs []models.Hub) []uint {
 	var hubIDs []uint
 	for _, hub := range hubs {
@@ -184,15 +158,12 @@ func getHubIDs(hubs []models.Hub) []uint {
 
 func FetchSKUsInHub(c *gin.Context) {
 	hubID := c.Param("id")
-
-	// Convert to proper data type
 	hubIDInt, err := strconv.Atoi(hubID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid hub_id"})
 		return
 	}
 
-	// Fetch inventories for the given hub
 	var inventories []models.Inventory
 	err = appinit.DB.Where("hub_id = ?", hubIDInt).Find(&inventories).Error
 	if err != nil {
@@ -200,7 +171,6 @@ func FetchSKUsInHub(c *gin.Context) {
 		return
 	}
 
-	// Fetch SKUs for the inventories
 	var skuIDs []uint
 	for _, inventory := range inventories {
 		skuIDs = append(skuIDs, inventory.Sku_id)
@@ -213,22 +183,17 @@ func FetchSKUsInHub(c *gin.Context) {
 		return
 	}
 
-	// Return SKUs as response
 	c.JSON(http.StatusOK, skus)
 }
 
 func ValidateSKU(c *gin.Context) {
 	skuID := c.Param("id")
-	fmt.Println("validate sku called on id -> ", skuID)
-
-	// Convert to proper data type
 	skuIDInt, err := strconv.Atoi(skuID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid sku_id"})
 		return
 	}
 
-	// Check if the SKU exists in the database
 	var sku models.SKU
 	err = appinit.DB.Where("id = ?", skuIDInt).First(&sku).Error
 	if err != nil {
@@ -240,6 +205,5 @@ func ValidateSKU(c *gin.Context) {
 		return
 	}
 
-	// If SKU exists, return success message
 	c.JSON(http.StatusOK, gin.H{"message": "SKU exists"})
 }

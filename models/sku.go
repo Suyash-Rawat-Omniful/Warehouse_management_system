@@ -6,7 +6,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// SKU represents a product SKU in the system
 type SKU struct {
 	ID        uint   `gorm:"primaryKey;autoIncrement"`
 	ProductID uint   `gorm:"not null"`

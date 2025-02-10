@@ -15,27 +15,27 @@ func Initialize(ctx context.Context, s *http.Server) (err error) {
 	apiV1.GET("skus/validate/:id", controllers.ValidateSKU)
 	apiV1.GET("/skus/byTenant/:id", controllers.FetchSKUsByTenant)
 	apiV1.GET("/skus/byHub/:id", controllers.FetchSKUsInHub)
-	apiV1.POST("/skus", controllers.CreateSKU)       // Create SKU
-	apiV1.GET("/skus", controllers.GetAllSKUs)       // Get all SKUs
-	apiV1.GET("/skus/:id", controllers.GetSKU)       // Get SKU by ID
-	apiV1.PUT("/skus/:id", controllers.UpdateSKU)    // Update SKU
-	apiV1.DELETE("/skus/:id", controllers.DeleteSKU) // Delete SKU
+	apiV1.POST("/skus", controllers.CreateSKU)
+	apiV1.GET("/skus", controllers.GetAllSKUs)
+	apiV1.GET("/skus/:id", controllers.GetSKU)
+	apiV1.PUT("/skus/:id", controllers.UpdateSKU)
+	apiV1.DELETE("/skus/:id", controllers.DeleteSKU)
 
 	// Tenant Routes
-	apiV1.POST("/tenants", controllers.CreateTenant)       // Create Tenant
-	apiV1.GET("/tenants", controllers.GetAllTenants)       // Get all Tenants
-	apiV1.GET("/tenants/:id", controllers.GetTenant)       // Get Tenant by ID
-	apiV1.PUT("/tenants/:id", controllers.UpdateTenant)    // Update Tenant
-	apiV1.DELETE("/tenants/:id", controllers.DeleteTenant) // Delete Tenant
+	apiV1.POST("/tenants", controllers.CreateTenant)
+	apiV1.GET("/tenants", controllers.GetAllTenants)
+	apiV1.GET("/tenants/:id", controllers.GetTenant)
+	apiV1.PUT("/tenants/:id", controllers.UpdateTenant)
+	apiV1.DELETE("/tenants/:id", controllers.DeleteTenant)
 
 	// Hub Routes
 	apiV1.GET("/hubs/validate/:id", controllers.ValidateHub)
-	apiV1.POST("/hubs/multiple", controllers.CreateMultipleHubs) // Create Hub
-	apiV1.POST("/hubs", controllers.CreateHub)                   // Create Hub
-	apiV1.GET("/hubs", controllers.GetAllHubs)                   // Get all Hubs
-	apiV1.GET("/hubs/:id", controllers.GetHub)                   // Get Hub by ID
-	apiV1.PUT("/hubs/:id", controllers.UpdateHub)                // Update Hub
-	apiV1.DELETE("/hubs/:id", controllers.DeleteHub)             // Delete Hub
+	apiV1.POST("/hubs/multiple", controllers.CreateMultipleHubs)
+	apiV1.POST("/hubs", controllers.CreateHub)
+	apiV1.GET("/hubs", controllers.GetAllHubs)
+	apiV1.GET("/hubs/:id", controllers.GetHub)
+	apiV1.PUT("/hubs/:id", controllers.UpdateHub)
+	apiV1.DELETE("/hubs/:id", controllers.DeleteHub)
 	// Inventory Routes
 	apiV1.POST("/inventories", controllers.CreateInventory)
 	apiV1.GET("/inventories", controllers.GetAllInventories)

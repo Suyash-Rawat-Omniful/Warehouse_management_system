@@ -20,17 +20,6 @@ const (
 )
 
 func main() {
-	// err := config.Init(time.Second * 10)
-	// if err != nil {
-	// 	log.Panicf("Error while initialising config, err: %v", err)
-	// 	panic(err)
-	// }
-
-	// ctx, err := config.TODOContext()
-	// if err != nil {
-	// 	log.Panicf("Error while getting context from config, err: %v", err)
-	// 	panic(err)
-	// }
 	ctx := context.TODO()
 	runMigration(ctx, "up", "0")
 	appinit.Initialize(ctx)

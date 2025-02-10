@@ -22,7 +22,7 @@ func CreateMultipleHubs(ctx *gin.Context) {
 	}
 
 	for i := 100; i <= 100000; i++ {
-		newHub := hub // Copy the hub object
+		newHub := hub
 		newHub.ID += uint(i)
 
 		if err := services.CreateHub(&newHub); err != nil {
@@ -30,18 +30,11 @@ func CreateMultipleHubs(ctx *gin.Context) {
 			return
 		}
 
-		ID := strconv.FormatUint(uint64(newHub.ID), 10)
-		fields := map[string]interface{}{
-			"ID":        newHub.ID,
-			"Tenant_ID": newHub.TenantID,
-		}
-		_, _ = redis.Client.HSetAll(ctx, "hub:"+ID, fields)
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"message": "Multiple hubs created successfully"})
 }
 
-// CreateHub creates a new hub
 func CreateHub(ctx *gin.Context) {
 	var hub models.Hub
 	if err := ctx.ShouldBindJSON(&hub); err != nil {
@@ -54,17 +47,9 @@ func CreateHub(ctx *gin.Context) {
 		return
 	}
 
-	ID := strconv.FormatUint(uint64(hub.ID), 10)
-	fields := map[string]interface{}{
-		"ID":        hub.ID,
-		"Tenant_ID": hub.TenantID,
-	}
-	_, _ = redis.Client.HSetAll(ctx, "hub:"+ID, fields)
-
 	ctx.JSON(http.StatusCreated, hub)
 }
 
-// GetAllHubs retrieves all hubs
 func GetAllHubs(ctx *gin.Context) {
 	hubs, err := services.GetAllHubs()
 	if err != nil {
@@ -75,7 +60,6 @@ func GetAllHubs(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, hubs)
 }
 
-// GetHub retrieves a single hub by ID
 func GetHub(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, err := strconv.ParseUint(idStr, 10, 32)
@@ -105,7 +89,6 @@ func GetHub(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, hub)
 }
 
-// UpdateHub updates an existing hub
 func UpdateHub(ctx *gin.Context) {
 	var hub models.Hub
 	idStr := ctx.Param("id")
@@ -129,7 +112,6 @@ func UpdateHub(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, hub)
 }
 
-// DeleteHub deletes a hub by ID
 func DeleteHub(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, err := strconv.ParseUint(idStr, 10, 32)
@@ -148,15 +130,11 @@ func DeleteHub(ctx *gin.Context) {
 
 func ValidateHub(c *gin.Context) {
 	hubID := c.Param("id")
-
-	// Convert to proper data type
 	hubIDInt, err := strconv.Atoi(hubID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid hub_id"})
 		return
 	}
-
-	// Check if the Hub exists in the database
 	var hub models.Hub
 	err = appinit.DB.Where("id = ?", hubIDInt).First(&hub).Error
 	if err != nil {
@@ -168,6 +146,5 @@ func ValidateHub(c *gin.Context) {
 		return
 	}
 
-	// If hub exists, return success message
 	c.JSON(http.StatusOK, gin.H{"message": "Hub exists"})
 }
